@@ -34,4 +34,39 @@ const getUsers = async (req: Request, res: Response) => {
   }
 };
 
-export { createUser, getUsers };
+const getUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id);
+    if (!user) {
+      res.status(400).json({ message: "Something went wrong" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json({ message: "Cannot found user with id " + id });
+  }
+};
+
+const updateUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findByIdAndUpdate(id, req.body, { new: true });
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(404).json({ message: "Cannot update user that doesn't exist!" });
+  }
+};
+
+const deleteUser = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findByIdAndDelete(id);
+    res.status(200).json(user);
+  } catch (error) {
+    res
+      .status(404)
+      .json({ message: "Cannont delete user that doesn't exist!" });
+  }
+};
+
+export { createUser, getUsers, getUser, updateUser, deleteUser };
