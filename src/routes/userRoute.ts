@@ -1,17 +1,20 @@
 import { Router } from "express";
+import { protect } from "../middleware/authMiddleware.js";
 import {
-  createUser,
-  getUsers,
-  getUser,
-  updateUser,
-  deleteUser,
+  authUser,
+  registerUser,
+  logoutUser,
+  getUserProfile,
+  updateUserProfile,
 } from "../controllers/userController.js";
 const router = Router();
 
-router.get("/", getUsers).post("/");
-router.post("/", createUser);
-router.get("/:id", getUser);
-router.put("/:id", updateUser);
-router.delete("/:id", deleteUser);
+router.post("/", registerUser);
+router.post("/auth", authUser);
+router.post("/logout", logoutUser);
+router
+  .route("/profile")
+  .get(protect, getUserProfile)
+  .put(protect, updateUserProfile);
 
 export default router;
